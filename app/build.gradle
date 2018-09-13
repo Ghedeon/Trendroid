@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.ghedeon.trendroid"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildTypes.each {
+        it.buildConfigField "String", "API_URL", "\"https://github.com/\""
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+}
+
+dependencies {
+    implementation deps.kotlin.stdlib
+
+    implementation deps.androidx.appcompat
+    implementation deps.androidx.core
+    implementation deps.androidx.cardview
+    implementation deps.androidx.recyclerview
+
+    implementation deps.lifecycle.extension
+    implementation deps.constraint_layout
+
+    implementation deps.navigation.fragment
+    implementation deps.navigation.ui
+
+    implementation deps.dagger.runtime
+    implementation deps.dagger.android
+    implementation deps.dagger.support
+
+    implementation deps.rx.java
+    implementation deps.rx.android
+    implementation deps.rx.kotlin
+    implementation deps.rx_binding
+    implementation deps.rx_relay
+
+    implementation deps.okhttp
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.rx_adapter
+    implementation deps.retrofit.moshi_converter
+
+    implementation deps.mobius.core
+    implementation deps.mobius.rx
+    implementation deps.mobius.android
+    implementation deps.mobius.extras
+
+    implementation deps.epoxy.runtime
+
+    implementation deps.jsoup
+    implementation deps.videoview
+    implementation deps.timber
+
+    debugImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0" //TODO
+
+    kapt deps.lifecycle.compiler
+    kapt deps.dagger.compiler
+    kapt deps.dagger.processor
+    kapt deps.epoxy.processor
+}
