@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileSdkVersion 28
@@ -21,11 +22,17 @@ android {
     }
 
     buildTypes.each {
-        it.buildConfigField "String", "API_URL", "\"https://github.com/\""
+        it.buildConfigField "String", "GITHUB_URL", "\"https://github.com/\""
+        it.buildConfigField "String", "GITHUB_API_URL", "\"https://api.github.com/\""
     }
 
     androidExtensions {
         experimental = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -38,6 +45,7 @@ dependencies {
     implementation deps.androidx.recyclerview
 
     implementation deps.lifecycle.extension
+    implementation deps.lifecycle.java8
     implementation deps.constraint_layout
 
     implementation deps.navigation.fragment
@@ -64,15 +72,14 @@ dependencies {
     implementation deps.mobius.extras
 
     implementation deps.epoxy.runtime
-
+    implementation deps.glide.runtime
     implementation deps.jsoup
     implementation deps.videoview
     implementation deps.timber
-
-    debugImplementation "com.squareup.okhttp3:logging-interceptor:3.10.0" //TODO
 
     kapt deps.lifecycle.compiler
     kapt deps.dagger.compiler
     kapt deps.dagger.processor
     kapt deps.epoxy.processor
+    kapt deps.glide.compiler
 }

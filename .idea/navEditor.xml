@@ -31,7 +31,7 @@
                         </option>
                         <option name="myPositions">
                           <map>
-                            <entry key="action_mainFragment_to_detailsFragment">
+                            <entry key="openRepo">
                               <value>
                                 <LayoutPositions />
                               </value>

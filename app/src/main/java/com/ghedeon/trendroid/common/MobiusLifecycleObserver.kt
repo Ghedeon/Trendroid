@@ -1,28 +1,28 @@
 package com.ghedeon.trendroid.common
 
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleOwner
 import com.spotify.mobius.MobiusLoop
 
 
 class MobiusLifecycleObserver<MODEL, EVENT>(
-	lifecycle: Lifecycle,
+	val lifecycle: Lifecycle,
 	private val controller: MobiusLoop.Controller<MODEL, EVENT>
-) : LifecycleObserver {
+) : DefaultLifecycleObserver {
 	
 	init {
 		lifecycle.addObserver(this)
 	}
 	
-	@OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-	fun start() = controller.start()
+	override fun onStart(owner: LifecycleOwner) = controller.start()
 	
-	@OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-	fun stop() = controller.stop()
+	override fun onStop(owner: LifecycleOwner) = controller.stop()
 	
-	@OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-	fun disconnect() = controller.disconnect()
+	override fun onDestroy(owner: LifecycleOwner) {
+		controller.disconnect()
+		lifecycle.removeObserver(this)
+	}
 }
 
 fun <MODEL, EVENT> MobiusLoop.Controller<MODEL, EVENT>.bind(lifecycle: Lifecycle) {

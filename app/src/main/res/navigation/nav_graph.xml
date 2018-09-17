@@ -8,15 +8,24 @@
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.ghedeon.trendroid.ui.details.DetailsFragment"
-        android:label="fragment_details"
-        tools:layout="@layout/fragment_details"/>
+        android:label="Repo Details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="repoUrl"
+            app:argType="string"
+            />
+    </fragment>
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.ghedeon.trendroid.ui.trending.TrendingFragment"
-        android:label="fragment_main"
+        android:label="Trendroid"
         tools:layout="@layout/fragment_trending">
         <action
-            android:id="@+id/action_mainFragment_to_detailsFragment"
-            app:destination="@id/detailsFragment"/>
+            android:id="@+id/openRepo"
+            app:destination="@id/detailsFragment"
+            app:popUpTo="@id/detailsFragment"
+            app:popUpToInclusive="true"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
     </fragment>
 </navigation>

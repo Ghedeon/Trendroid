@@ -2,4 +2,5 @@
     <dimen name="grid8">8dp</dimen>
     <dimen name="grid12">12dp</dimen>
     <dimen name="grid16">16dp</dimen>
+    <dimen name="detail_backdrop_height">256dp</dimen>
 </resources>

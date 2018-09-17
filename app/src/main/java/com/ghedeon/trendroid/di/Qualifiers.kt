@@ -21,13 +21,3 @@ annotation class IO
 @Qualifier
 @Retention(RUNTIME)
 annotation class UI
-
-@MustBeDocumented
-@Qualifier
-@Retention(RUNTIME)
-annotation class ForEvent
-
-@MustBeDocumented
-@Qualifier
-@Retention(RUNTIME)
-annotation class ForEffect

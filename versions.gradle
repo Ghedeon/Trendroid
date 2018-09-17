@@ -14,6 +14,7 @@ def versions = [
         rx_relay         : '2.0.0',
         mobius           : '1.2.0',
         epoxy            : '2.16.4',
+        glide            : '4.7.1',
         jsoup            : '1.11.3',
         videoview        : '1.0.4',
         timber           : '4.7.0'
@@ -33,11 +34,13 @@ ext.deps = [
         constraint_layout: "androidx.constraintlayout:constraintlayout:$versions.constraint_layout",
         lifecycle        : [
                 extension: "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle",
-                compiler : "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle"
+                compiler : "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle",
+                java8    : "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle"
         ],
         navigation       : [
-                fragment: "android.arch.navigation:navigation-fragment-ktx:$versions.navigation",
-                ui      : "android.arch.navigation:navigation-ui-ktx:$versions.navigation"
+                fragment        : "android.arch.navigation:navigation-fragment-ktx:$versions.navigation",
+                ui              : "android.arch.navigation:navigation-ui-ktx:$versions.navigation",
+                safe_args_plugin: "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
         ],
         dagger           : [
                 runtime  : "com.google.dagger:dagger:$versions.dagger",
@@ -68,6 +71,11 @@ ext.deps = [
         epoxy            : [
                 runtime  : "com.airbnb.android:epoxy:$versions.epoxy",
                 processor: "com.airbnb.android:epoxy-processor:$versions.epoxy"
+        ],
+        glide            : [
+                runtime : "com.github.bumptech.glide:glide:$versions.glide",
+                compiler: "com.github.bumptech.glide:compiler:$versions.glide"
+
         ],
         jsoup            : "org.jsoup:jsoup:$versions.jsoup",
         videoview        : "com.yqritc:android-scalablevideoview:$versions.videoview",
