@@ -1,68 +1,42 @@
 package com.ghedeon.trendroid.ui.trending
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
-import com.ghedeon.trendroid.common.MobiusLogger
-import com.ghedeon.trendroid.common.asMaybe
-import com.ghedeon.trendroid.common.bind
-import com.ghedeon.trendroid.common.error.ErrorHandler
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.ghedeon.trendroid.common.SingleLiveEvent
 import com.ghedeon.trendroid.domain.GithubRepository
-import com.ghedeon.trendroid.domain.TrendingRepoDomain
+import com.ghedeon.trendroid.ui.base.BaseViewModel
+import com.ghedeon.trendroid.ui.base.ErrorHandler
 import com.ghedeon.trendroid.ui.toRepoItem
-import com.spotify.mobius.Effects.effects
-import com.spotify.mobius.First.first
-import com.spotify.mobius.Mobius
-import com.spotify.mobius.MobiusLoop
-import com.spotify.mobius.Next
-import com.spotify.mobius.Next.*
-import com.spotify.mobius.rx2.RxConnectables
-import com.spotify.mobius.rx2.RxMobius
-import io.reactivex.Observable
-import io.reactivex.rxkotlin.cast
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class TrendingViewModel @Inject constructor(
-	private val githubRepos: GithubRepository
-) : ViewModel() {
+class TrendingViewModel @Inject constructor(private val githubRepos: GithubRepository) :
+	BaseViewModel() {
 	
-	private val loop: MobiusLoop.Factory<Model, Event, Effect> = RxMobius.loop(::update, ::effectHandler)
-		.init { first(InitModel, setOf(InitEffect, LoadReposEffect)) }
-		.logger(MobiusLogger())
+	private val _uiModel = MutableLiveData<Model>().apply { value = InitModel }
+	val uiModel: LiveData<Model> get() = _uiModel
 	
-	private var controller: MobiusLoop.Controller<Model, Event> = Mobius.controller(loop, InitModel)
-	private var repos: List<TrendingRepoDomain>? = null
+	private val _uiEffects = SingleLiveEvent<Effect>()
+	val uiEffects: LiveData<Effect> get() = _uiEffects
 	
-	fun bind(modelToEvent: (Observable<Model>) -> Observable<Event>, lifecycle: Lifecycle) {
-		controller.connect(RxConnectables.fromTransformer(modelToEvent))
-		controller.bind(lifecycle)
+	private val errorHandler = ErrorHandler {
+		_uiModel.value = ErrorModel(it)
 	}
 	
-	private fun update(model: Model, event: Event): Next<Model, Effect> = when (event) {
-		is InitEvent -> if (repos == null) next<Model, Effect>(InitModel) else noChange<Model, Effect>()
-		is LoadReposEvent -> dispatch(effects(LoadReposEffect))
-		is ReposLoadedEvent.Success -> next(DisplayReposModel(event.repos.map { it.toRepoItem() }))
-		is ReposLoadedEvent.Failure -> next(ErrorModel(event.msg))
-		is RepoClickedEvent -> next(OpenRepoModel(event.url))
+	fun onObserve() {
+		loadRepos()
 	}
 	
-	private fun effectHandler(effects: Observable<Effect>): Observable<Event> = effects.flatMap { effect ->
-		when (effect) {
-			is InitEffect -> Observable.just(InitEvent)
-			is LoadReposEffect -> loadRepos()
+	fun onUiEvent(event: Event) {
+		println(event)
+		when (event) {
+			is RepoClickedEvent -> _uiEffects.value = OpenRepoEffect(event.url)
 		}
 	}
 	
-	private fun loadRepos(): Observable<ReposLoadedEvent> =
-		repos.asMaybe()
-			.concatWith(githubRepos.trending().toMaybe())
-			.firstOrError()
-			.flatMapObservable { repos ->
-				this.repos = repos
-				Observable.just(ReposLoadedEvent.Success(repos))
-			}
-			.cast<ReposLoadedEvent>()
-			.onErrorReturn(ErrorHandler { msg ->
-				ReposLoadedEvent.Failure(msg)
-			})
+	private fun loadRepos() = launch(errorHandler) {
+		val repos = githubRepos.trending().map { it.toRepoItem() }
+		_uiModel.value = DisplayReposModel(repos)
+	}
 }

@@ -36,16 +36,24 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation deps.kotlin.stdlib
+    implementation deps.kotlin.coroutines_core
+    implementation deps.kotlin.coroutines_android
 
     implementation deps.androidx.appcompat
     implementation deps.androidx.core
     implementation deps.androidx.cardview
     implementation deps.androidx.recyclerview
 
-    implementation deps.lifecycle.extension
+    implementation deps.lifecycle.extensions
     implementation deps.lifecycle.java8
+    implementation deps.lifecycle.ktx
+
     implementation deps.constraint_layout
 
     implementation deps.navigation.fragment
@@ -55,21 +63,11 @@ dependencies {
     implementation deps.dagger.android
     implementation deps.dagger.support
 
-    implementation deps.rx.java
-    implementation deps.rx.android
-    implementation deps.rx.kotlin
-    implementation deps.rx_binding
-    implementation deps.rx_relay
-
-    implementation deps.okhttp
+    implementation deps.okhttp.core
+    implementation deps.okhttp.logging
     implementation deps.retrofit.runtime
-    implementation deps.retrofit.rx_adapter
     implementation deps.retrofit.moshi_converter
-
-    implementation deps.mobius.core
-    implementation deps.mobius.rx
-    implementation deps.mobius.android
-    implementation deps.mobius.extras
+    implementation deps.retrofit.coroutines_adapter
 
     implementation deps.epoxy.runtime
     implementation deps.glide.runtime
@@ -77,7 +75,6 @@ dependencies {
     implementation deps.videoview
     implementation deps.timber
 
-    kapt deps.lifecycle.compiler
     kapt deps.dagger.compiler
     kapt deps.dagger.processor
     kapt deps.epoxy.processor

@@ -7,12 +7,12 @@ import com.ghedeon.trendroid.data.Api
 import com.ghedeon.trendroid.data.GithubApi
 import com.ghedeon.trendroid.data.GithubDataRepository
 import com.ghedeon.trendroid.domain.GithubRepository
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
@@ -38,7 +38,7 @@ abstract class DataModule {
 			.client(okHttpClient)
 			.baseUrl(Api.API_URL)
 			.addConverterFactory(MoshiConverterFactory.create())
-			.addCallAdapterFactory(ErrorCallAdapterFactory.create(RxJava2CallAdapterFactory.create()))
+			.addCallAdapterFactory(ErrorCallAdapterFactory(CoroutineCallAdapterFactory()))
 			.build()
 	}
 }
@@ -52,9 +52,14 @@ abstract class OkHttpBuilderModule {
 		@Provides
 		@Singleton
 		@JvmStatic
-		fun provideOkHttpClientBuilder() = OkHttpClient.Builder()
-			.followRedirects(true)
-			.followSslRedirects(true)
+		fun provideOkHttpClientBuilder(): OkHttpClient.Builder {
+			val loggingInterceptor = HttpLoggingInterceptor()
+			loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+			return OkHttpClient.Builder()
+				.followRedirects(true)
+				.followSslRedirects(true)
+				.addInterceptor(loggingInterceptor)
+		}
 	}
 }
 

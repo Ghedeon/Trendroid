@@ -8,11 +8,11 @@ Dependency Injection: `Dagger`
 
 Networking: `Retrofit`
 
-Reactive aspect: `RxJava`
+Asynchronous execution: `Coroutines`
 
-MVI: `Mobius (Spotify) + RxBindings + RxRelay` (Alternatives: `LiveData`, `MvRx` by Airbnb, `MVICore` by Badoo)
+MVI: `LiveData` (Alternatives:`Mobius` by Spotify, `MvRx` by Airbnb, `MVICore` by Badoo)
 
-Multitype RecyclerView: `Epoxy` by Airbnb
+Multi type RecyclerView: `Epoxy` by Airbnb
 
 Logging: `Timber`
 

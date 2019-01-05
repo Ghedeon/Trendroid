@@ -1,11 +1,9 @@
 package com.ghedeon.trendroid.domain
 
-import io.reactivex.Single
-
 
 interface GithubRepository {
 	
-	fun trending(): Single<List<TrendingRepoDomain>>
+	suspend fun trending(): List<TrendingRepoDomain>
 	
-	fun repo(url: String): Single<RepoDomain>
+	suspend fun repo(url: String): RepoDomain
 }

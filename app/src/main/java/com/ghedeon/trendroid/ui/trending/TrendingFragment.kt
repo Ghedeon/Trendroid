@@ -10,11 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ghedeon.trendroid.R
 import com.ghedeon.trendroid.common.*
-import com.jakewharton.rxrelay2.PublishRelay
+import com.shopify.livedataktx.nonNull
+import com.shopify.livedataktx.observe
 import com.yqritc.scalablevideoview.ScalableVideoView
 import dagger.android.support.DaggerFragment
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import kotlinx.android.synthetic.main.fragment_trending.*
 import javax.inject.Inject
 
@@ -23,22 +22,15 @@ class TrendingFragment : DaggerFragment() {
 	@Inject
 	lateinit var viewModels: ViewModelProvider.Factory
 	private val viewModel by bindViewModel<TrendingViewModel> { viewModels }
-	private val events = PublishRelay.create<Event>()
 	private var wasSplashShown = false
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
 		container?.inflate(R.layout.fragment_trending)
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		viewModel.bind(::bindEvents, viewLifecycle)
-	}
-	
-	private fun bindEvents(models: Observable<Model>): Observable<Event> {
-		val disposable = models
-			.observeOn(mainThread())
-			.subscribe { model -> render(model) }
-		
-		return events.doOnDispose { disposable.dispose() }
+		viewModel.onObserve()
+		viewModel.uiModel.nonNull().observe(this, ::render)
+		viewModel.uiEffects.observe(this, ::onEffect)
 	}
 	
 	private fun render(model: Model) {
@@ -48,8 +40,14 @@ class TrendingFragment : DaggerFragment() {
 				if (wasSplashShown) hideLoading()
 				displayRepos(model.repos)
 			}
-			is OpenRepoModel -> openRepo(model.url)
 			is ErrorModel -> context?.toast(model.msg.resolve(context))
+		}
+	}
+	
+	private fun onEffect(effect: Effect?) {
+		println(effect)
+		when (effect) {
+			is OpenRepoEffect -> openRepo(effect.url)
 		}
 	}
 	
@@ -62,13 +60,12 @@ class TrendingFragment : DaggerFragment() {
 	}
 	
 	private fun displayRepos(repos: List<RepoItem>) {
-		recycler_view.withModels {
-			for (repo in repos) {
-				repo.apply { clickObservable.map { RepoClickedEvent(url = it) }.subscribe(events) }
-					.id(repo.url)
-					.addTo(this)
-			}
+		for (repo in repos) {
+			repo.onClick { viewModel.onUiEvent(RepoClickedEvent(url = it)) }
+				.id(repo.url)
+			println(repo)
 		}
+		recycler_view.setModels(repos)
 	}
 	
 	private fun showLoadingVideo() {

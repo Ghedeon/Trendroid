@@ -9,8 +9,7 @@ abstract class KotlinModel(
 	@LayoutRes private val layoutRes: Int
 ) : EpoxyModel<View>(), LayoutContainer {
 	
-	override val containerView: View?
-		get() = view
+	override val containerView: View? get() = view
 	
 	private var view: View? = null
 	
@@ -28,5 +27,4 @@ abstract class KotlinModel(
 	override fun getDefaultLayout() = layoutRes
 	
 	protected fun requireView() = requireNotNull(containerView) { "view must be not null" }
-	
 }
