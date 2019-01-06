@@ -6,10 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ghedeon.trendroid.R
-import com.ghedeon.trendroid.common.*
+import com.ghedeon.trendroid.common.actionBar
+import com.ghedeon.trendroid.common.catchAll
+import com.ghedeon.trendroid.common.inflate
+import com.ghedeon.trendroid.common.toast
 import com.shopify.livedataktx.nonNull
 import com.shopify.livedataktx.observe
 import com.yqritc.scalablevideoview.ScalableVideoView
@@ -21,7 +25,7 @@ class TrendingFragment : DaggerFragment() {
 	
 	@Inject
 	lateinit var viewModels: ViewModelProvider.Factory
-	private val viewModel by bindViewModel<TrendingViewModel> { viewModels }
+	private val viewModel by viewModels<TrendingViewModel> { viewModels }
 	private var wasSplashShown = false
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =

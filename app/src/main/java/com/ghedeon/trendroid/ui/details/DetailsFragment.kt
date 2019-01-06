@@ -5,10 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.ghedeon.trendroid.R
-import com.ghedeon.trendroid.common.bindViewModel
 import com.ghedeon.trendroid.common.inflate
 import com.ghedeon.trendroid.common.toast
 import com.ghedeon.trendroid.common.withModels
@@ -24,8 +24,8 @@ class DetailsFragment : DaggerFragment() {
 	
 	@Inject
 	lateinit var viewModels: ViewModelProvider.Factory
-	private val viewModel by bindViewModel<DetailsViewModel> { viewModels }
-
+	private val viewModel by viewModels<DetailsViewModel> { viewModels }
+	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) =
 		container?.inflate(R.layout.fragment_details)
 	

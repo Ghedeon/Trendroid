@@ -49,10 +49,12 @@ dependencies {
     implementation deps.androidx.core
     implementation deps.androidx.cardview
     implementation deps.androidx.recyclerview
+    implementation deps.androidx.fragment
 
     implementation deps.lifecycle.extensions
     implementation deps.lifecycle.java8
-    implementation deps.lifecycle.ktx
+    implementation deps.lifecycle.shopify_livedata_ktx
+    implementation deps.lifecycle.livedata_ktx
 
     implementation deps.constraint_layout
 
