@@ -2,6 +2,9 @@
   <dictionary name="ghedeon">
     <words>
       <w>coroutines</w>
+      <w>kapt</w>
+      <w>safeargs</w>
+      <w>trendroid</w>
     </words>
   </dictionary>
 </component>

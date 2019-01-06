@@ -30,7 +30,7 @@ class DetailsFragment : DaggerFragment() {
 		container?.inflate(R.layout.fragment_details)
 	
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		viewModel.repoUrl = fromBundle(arguments).repoUrl
+		viewModel.repoUrl = fromBundle(arguments!!).repoUrl
 		viewModel.uiModel.nonNull().observe(this, ::render)
 	}
 	

@@ -1,5 +1,7 @@
 # Trending Android Repositories
 
+_Note_: Android Studio 3.3 RC 2 and above required
+              
 ## Implementation overview
 
     Clean Architecture + Android Architecture Components (ViewModel/Lifecycle/Navigation) + MVI
@@ -19,3 +21,5 @@ Logging: `Timber`
 Image loading: `Glide`
 
 Html Parsing: `Jsoup`
+
+Dependency Management: Kotlin-DSL
